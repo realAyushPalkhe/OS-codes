@@ -202,32 +202,18 @@ void scan(int requests[], int n, int initial_position, int total_tracks, const c
 
 // Driver code
 int main() {
-    int n, initial_position, total_tracks;
-
-    printf("Enter the total number of tracks: ");
-    scanf("%d", &total_tracks);
-
-    printf("Enter the number of requests: ");
-    scanf("%d", &n);
-
-    int requests[100];
-    printf("Enter the request queue: ");
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &requests[i]);
-    }
-
-    printf("Enter the initial disk head position: ");
-    scanf("%d", &initial_position);
+    // Hardcoded input
+    int total_tracks = 200;
+    int n = 8;
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int initial_position = 53;
+    const char* direction = "left";
 
     // Validate initial position
     if (initial_position < 0 || initial_position >= total_tracks) {
         printf("Invalid initial position!\n");
         return 1;
     }
-
-    char direction[10];
-    printf("Enter the direction of movement (left or right): ");
-    scanf("%s", direction);
 
     // Validate direction
     if (strcmp(direction, "left") != 0 && strcmp(direction, "right") != 0) {
@@ -238,6 +224,7 @@ int main() {
     scan(requests, n, initial_position, total_tracks, direction);
     return 0;
 }
+
 */
 //--------------------------C-SCAN-----------------------------
 /*
@@ -316,22 +303,11 @@ void cscan(int requests[], int n, int initial_position, int total_tracks) {
 
 // Driver code
 int main() {
-    int n, initial_position, total_tracks;
-
-    printf("Enter the total number of tracks: ");
-    scanf("%d", &total_tracks);
-
-    printf("Enter the number of requests: ");
-    scanf("%d", &n);
-
-    int requests[100];
-    printf("Enter the request queue: ");
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &requests[i]);
-    }
-
-    printf("Enter the initial disk head position: ");
-    scanf("%d", &initial_position);
+    // Hardcoded input
+    int total_tracks = 200;
+    int n = 8;
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int initial_position = 53;
 
     // Validate initial position
     if (initial_position < 0 || initial_position >= total_tracks) {
@@ -342,4 +318,5 @@ int main() {
     cscan(requests, n, initial_position, total_tracks);
     return 0;
 }
+
 */
