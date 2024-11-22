@@ -28,60 +28,50 @@ int isPowerOf2(int n) {
 
 // Function to find the nearest power of 2
 int nextPowerOf2(int n) {
-    if (n <= 0) return 1; // Handle edge case
-    return (int)pow(2, ceil(log(n) / log(2)));
+    return pow(2, ceil(log(n) / log(2)));
 }
 
 // Function to allocate memory using the Buddy System
 int allocate(Block *block, int size) {
-    if (block == NULL) {
-        return 0; // Base case for recursion
+    if (!block->isFree || block->size < size) {
+        return 0; // No space to allocate
     }
 
-    // If the block is free and the size fits
-    if (block->isFree && block->size >= size) {
-        // If the block size is exactly the requested size
-        if (block->size == size) {
-            block->isFree = 0; // Mark as allocated
-            return 1;
-        }
-
-        // If the block can be split
-        if (!block->left && !block->right) {
-            // Split the block into two
-            block->left = createBlock(block->size / 2);
-            block->right = createBlock(block->size / 2);
-        }
-
-        // Try to allocate in the left buddy
-        if (allocate(block->left, size)) {
-            return 1;
-        }
-
-        // If left allocation fails, try the right buddy
-        return allocate(block->right, size);
+    // If block size exactly matches the requested size
+    if (block->size == size) {
+        block->isFree = 0;
+        return 1;
     }
 
-    return 0; // No allocation made
+    // If block size is larger, split it
+    if (!block->left && !block->right) {
+        block->left = createBlock(block->size / 2);
+        block->right = createBlock(block->size / 2);
+    }
+
+    // Try allocating in the left or right buddy
+    if (allocate(block->left, size)) {
+        return 1;
+    }
+    return allocate(block->right, size);
 }
 
 // Function to remove the process from memory (deallocate)
 int deallocate(Block *block, int size) {
-    if (block == NULL) {
-        return 0; // Base case for recursion
-    }
-
     if (block->size == size && !block->isFree) {
-        block->isFree = 1; // Mark block as free
+        block->isFree = 1;
         return 1;
     }
 
-    // Attempt to deallocate from left and right
-    if (deallocate(block->left, size)) {
+    if (block->left && deallocate(block->left, size)) {
         return 1;
     }
 
-    return deallocate(block->right, size);
+    if (block->right && deallocate(block->right, size)) {
+        return 1;
+    }
+
+    return 0;
 }
 
 // Function to display memory map (Buddy System)
@@ -90,8 +80,11 @@ void displayMemoryMap(Block *block) {
         return;
     }
 
-    // Displaying block status
-    printf("%d --> %s\n", block->size, block->isFree ? "Free" : "Allocated");
+    if (block->isFree) {
+        printf("%d --> Free\n", block->size);
+    } else {
+        printf("%d --> Allocated\n", block->size);
+    }
 
     displayMemoryMap(block->left);
     displayMemoryMap(block->right);
@@ -100,10 +93,10 @@ void displayMemoryMap(Block *block) {
 // Main function
 int main() {
     int memoryBlock, choice, processSize;
-    printf("Memory Block: ");
+    printf("Enter Memory Block Size: ");
     scanf("%d", &memoryBlock);
 
-    // Ensure the initial memory block is a power of 2
+    // Check if memory block size is a power of 2
     if (!isPowerOf2(memoryBlock)) {
         printf("Error: Memory block size must be a power of 2.\n");
         return 1;
